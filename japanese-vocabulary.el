@@ -146,5 +146,5 @@
 
 (setq luceurre/japanese-names (luceurre/japanese-load-csv-from-file (luceurre/japanese-get-names-filename)))
 (setq luceurre/japanese-verbs (luceurre/japanese-load-csv-from-file (luceurre/japanese-get-verbs-filename)))
-(provide 'japanese)
+(provide 'japanese-vocabulary)
 ;;; japanese.el ends here
