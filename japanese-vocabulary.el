@@ -20,9 +20,14 @@
 ;;
 ;;; Code:
 
-(setq luceurre/japanese-vocabulary-directory "~/Documents/Japanese/Vocabulaire/")
-(setq luceurre/japanese-names-filename "names.csv")
-(setq luceurre/japanese-verbs-filename "verbs.csv")
+(defvar luceurre/japanese-vocabulary-directory "~/Documents/Japanese/Vocabulaire/"
+  "Path to the directory where you want your vocabulary stored.")
+(defvar luceurre/japanese-names-filename "names.csv"
+  "Filename where you want your names stored.")
+(defvar luceurre/japanese-verbs-filename "verbs.csv"
+  "Filename where you want your verbs stored.")
+(defvar luceurre/japanese-names)
+(defvar luceurre/japanese-verbs)
 
 (defun luceurre/japanese-get-names-filename ()
   "Return filename where names vocab are stored."
@@ -33,14 +38,14 @@
   (concat luceurre/japanese-vocabulary-directory luceurre/japanese-verbs-filename))
 
 (defun luceurre/japanese-load-csv-from-file (filename)
-  "Return a double dimension list with csv filename data in it."
+  "Return a double dimension list with csv FILENAME data in it."
   (let ((buf (find-file-noselect filename t t)))
     (luceurre/japanese-csv-buffer-to-elisp buf)
     )
   )
 
 (defun luceurre/japanese-load-csv-from-string (csv-string)
-  "Return Lisp object from string with csv."
+  "Return Lisp object from string CSV-STRING with csv."
   (interactive "mcsv: ")
   (with-temp-buffer
     (insert csv-string)
@@ -49,7 +54,7 @@
   )
 
 (defun luceurre/japanese-csv-buffer-to-elisp (csv-buffer)
-  "Return Lisp object from buffer or buffer name with csv."
+  "Return Lisp object from buffer or buffer name CSV-BUFFER with csv."
   (let ((buf csv-buffer)
         (result nil))
     (with-current-buffer buf
@@ -67,7 +72,7 @@
   )
 
 (defun luceurre/japanese-dump-csv-to-file (filename csv-table)
-  "dump csv-table in filename with csv convention."
+  "Dump CSV-TABLE Lisp object in FILENAME with csv convention."
   (with-temp-file filename
     (set-buffer-file-coding-system 'utf-8)
     (dolist (row csv-table)
@@ -81,9 +86,9 @@
     )
   )
 
-(defun luceurre/japanese-dump-csv-to-buffer (csv-table buffer-name)
-  "dump csv-table in filename with csv convention."
-  (let ((buf (generate-new-buffer buffer-name)))
+(defun luceurre/japanese-dump-csv-to-buffer (csv-table buffer)
+  "Dump CSV-TABLE in BUFFER with csv convention."
+  (let ((buf (generate-new-buffer buffer)))
     (switch-to-buffer buf)
     (set-buffer-file-coding-system 'utf-8)
     (dolist (row csv-table)
@@ -99,7 +104,7 @@
   )
 
 (defun luceurre/japanese-add-name (french japanese kanji)
-  "add word to name vocabulary list."
+  "Add vocabulary name FRENCH, JAPANESE, KANJI to name vocabulary list."
   (interactive "Mfrench: \nMjapanese: \nMkanji: ")
 
   (push (list french japanese kanji) luceurre/japanese-names)
@@ -107,7 +112,7 @@
   )
 
 (defun luceurre/japanese-add-verbs (french japanese group)
-  "add word to name vocabulary list."
+  "Add vocabulary verb FRENCH, JAPANESE, GROUP to verb vocabulary list."
   (interactive "Mfrench: \nMjapanese: \nMgroup: ")
 
   (push (list french japanese group) luceurre/japanese-verbs)
@@ -146,5 +151,6 @@
 
 (setq luceurre/japanese-names (luceurre/japanese-load-csv-from-file (luceurre/japanese-get-names-filename)))
 (setq luceurre/japanese-verbs (luceurre/japanese-load-csv-from-file (luceurre/japanese-get-verbs-filename)))
+
 (provide 'japanese-vocabulary)
-;;; japanese.el ends here
+;;; japanese-vocabulary.el ends here
