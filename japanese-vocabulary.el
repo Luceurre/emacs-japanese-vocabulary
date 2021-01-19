@@ -26,8 +26,10 @@
   "Filename where you want your names stored.")
 (defvar luceurre/japanese-verbs-filename "verbs.csv"
   "Filename where you want your verbs stored.")
+(defvar luceurre/japanese-adjectives-filename "adjectives.csv")
 (defvar luceurre/japanese-names)
 (defvar luceurre/japanese-verbs)
+(defvar luceurre/japanese-adjectives)
 
 (defun luceurre/japanese-get-names-filename ()
   "Return filename where names vocab are stored."
@@ -36,6 +38,10 @@
 (defun luceurre/japanese-get-verbs-filename ()
   "Return filename where names vocab are stored."
   (concat luceurre/japanese-vocabulary-directory luceurre/japanese-verbs-filename))
+
+(defun luceurre/japanese-get-adjectives-filename ()
+  "Return filename where adjectives are stored."
+  (concat luceurre/japanese-vocabulary-directory luceurre/japanese-adjectives-filename))
 
 (defun luceurre/japanese-load-csv-from-file (filename)
   "Return a double dimension list with csv FILENAME data in it."
@@ -119,6 +125,14 @@
   (luceurre/japanese-dump-csv-to-file (luceurre/japanese-get-verbs-filename) luceurre/japanese-verbs)
   )
 
+(defun luceurre/japanese-add-adjective (french japanese group)
+  "Add vocabulary verb FRENCH, JAPANESE, GROUP to verb vocabulary list."
+  (interactive "Mfrench: \nMjapanese: \nMgroup: ")
+
+  (push (list french japanese group) luceurre/japanese-adjectives)
+  (luceurre/japanese-dump-csv-to-file (luceurre/japanese-get-verbs-filename) luceurre/japanese-adjectives)
+  )
+
 ;; (defun luceurre/japanese-import-names-from-org-table ()
 ;;   "if org-table under point, add it to the names vocabulary list."
 ;;   (interactive)
@@ -128,6 +142,15 @@
 ;;          (table (buffer-substring table-begin table-end)))
 ;;     (message (prin1-to-string (org-element-table-parser nil nil)))
 ;;     ))
+
+(defun luceurre/japanese-dump-csv-to-org-table (csv-table buffer)
+  "Dump CSV-TABLE into BUFFER."
+  (let ((buf (luceurre/japanese-dump-csv-to-buffer csv-table buffer)))
+    (set-buffer buf)
+    (org-mode)
+    (org-table-convert-region (point-min) (point-max))
+    )
+  )
 
 (defun luceurre/japanese-dump-names-to-org-table ()
   "Dump names into a new org buffer in org-table format."
@@ -149,8 +172,15 @@
     )
   )
 
+(defun luceurre/japanese-dump-adjectives-to-org-table ()
+  "Dump adjectives into a new org buffer in org-table format."
+  (interactive)
+  (luceurre/japanese-dump-csv-to-org-table luceurre/japanese-adjectives "adjectives")
+  )
+
 (setq luceurre/japanese-names (luceurre/japanese-load-csv-from-file (luceurre/japanese-get-names-filename)))
 (setq luceurre/japanese-verbs (luceurre/japanese-load-csv-from-file (luceurre/japanese-get-verbs-filename)))
+(setq luceurre/japanese-adjectives (luceurre/japanese-load-csv-from-file (luceurre/japanese-get-adjectives-filename)))
 
 (provide 'japanese-vocabulary)
 ;;; japanese-vocabulary.el ends here
