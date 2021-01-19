@@ -130,7 +130,7 @@
   (interactive "Mfrench: \nMjapanese: \nMgroup: ")
 
   (push (list french japanese group) luceurre/japanese-adjectives)
-  (luceurre/japanese-dump-csv-to-file (luceurre/japanese-get-verbs-filename) luceurre/japanese-adjectives)
+  (luceurre/japanese-dump-csv-to-file (luceurre/japanese-get-adjectives-filename) luceurre/japanese-adjectives)
   )
 
 ;; (defun luceurre/japanese-import-names-from-org-table ()
