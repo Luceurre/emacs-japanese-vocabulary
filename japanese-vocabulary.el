@@ -16,7 +16,7 @@
 ;;; Commentary:
 ;;
 ;; Add vocabulary to your TOKNOW list from anywhere, anytime.
-;; Then dump into an org file to learn or
+;; Then dump into an org file to learn it.
 ;;
 ;;; Code:
 
@@ -181,6 +181,34 @@
 (setq luceurre/japanese-names (luceurre/japanese-load-csv-from-file (luceurre/japanese-get-names-filename)))
 (setq luceurre/japanese-verbs (luceurre/japanese-load-csv-from-file (luceurre/japanese-get-verbs-filename)))
 (setq luceurre/japanese-adjectives (luceurre/japanese-load-csv-from-file (luceurre/japanese-get-adjectives-filename)))
+
+;;;###autoload
+(define-minor-mode luceurre/japanese-vocabulary-mode
+  "Toggle japanese mode.
+Interactively with no argument, this command toggles the mode.
+A positive prefix argument enables the mode, any other prefix
+argument disables it.  From Lisp, argument omitted or nil enables
+the mode, `toggle' toggles the state.
+
+When Japanese mode is enabled, add a few function to add and display
+japanese vocabulary."
+  :init-value nil
+  :lighter " 日本"
+  :global t
+  (if luceurre/japanese-vocabulary-mode
+      (progn
+        (setq luceurre/japanese-names (luceurre/japanese-load-csv-from-file (luceurre/japanese-get-names-filename)))
+        (setq luceurre/japanese-verbs (luceurre/japanese-load-csv-from-file (luceurre/japanese-get-verbs-filename)))
+        (setq luceurre/japanese-adjectives (luceurre/japanese-load-csv-from-file (luceurre/japanese-get-adjectives-filename)))
+        )
+    (progn
+      (setq luceurre/japanese-names ())
+      (setq luceurre/japanese-verbs ())
+      (setq luceurre/japanese-adjectives ())
+      ))
+  )
+
+
 
 (provide 'japanese-vocabulary)
 ;;; japanese-vocabulary.el ends here
